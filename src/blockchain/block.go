@@ -2,8 +2,8 @@ package blockchain
 
 import (
 	"bytes"
-	"crypto/sha256"
-	"strconv"
+	"encoding/gob"
+	"log"
 	"time"
 )
 
@@ -15,12 +15,23 @@ type Block struct {
 	Nonce        int
 }
 
-func (b *Block) SetHash() {
-	timestamp := []byte(strconv.FormatInt(b.Timestamp, 10))
-	headers := bytes.Join([][]byte{b.PreBlockHash, b.Data, timestamp}, []byte{})
-	hash := sha256.Sum256(headers)
-	b.Hash = hash[:]
-	return
+func (r *Block) Serialize() []byte {
+	var buf bytes.Buffer
+	encoder := gob.NewEncoder(&buf)
+	err := encoder.Encode(r)
+	if err != nil {
+		log.Panic(err)
+	}
+	return buf.Bytes()
+}
+
+func Deserialize(blockBytes []byte) *Block {
+	block := &Block{}
+	decoder := gob.NewDecoder(bytes.NewBuffer(blockBytes))
+	if err := decoder.Decode(block); err != nil {
+		log.Panic(err)
+	}
+	return block
 }
 
 func NewBlock(data string, preBlockHash []byte) *Block {
