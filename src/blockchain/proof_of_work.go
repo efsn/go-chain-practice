@@ -12,11 +12,13 @@ var maxNonce = math.MaxInt64
 
 const targetBits = 16
 
+// ProofOfWork POW
 type ProofOfWork struct {
 	block  *Block
 	target *big.Int
 }
 
+// NewProofOfWork say something
 func NewProofOfWork(b *Block) *ProofOfWork {
 	target := big.NewInt(1)
 	target.Lsh(target, uint(256-targetBits))
@@ -35,6 +37,7 @@ func (r *ProofOfWork) prepareData(nonce int) []byte {
 	return data
 }
 
+// Run calc POW
 func (r *ProofOfWork) Run() (int, []byte) {
 	var (
 		hashInt big.Int
@@ -59,6 +62,7 @@ func (r *ProofOfWork) Run() (int, []byte) {
 	return nonce, hash[:]
 }
 
+// Valid check POW
 func (r *ProofOfWork) Valid() bool {
 	var hashInt big.Int
 	data := r.prepareData(r.block.Nonce)
