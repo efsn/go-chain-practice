@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"go-chain-practice/src/blockchain"
+	"github.com/efsn/go-chain-practice/internal/blockchain"
 	"log"
 	"strconv"
 
